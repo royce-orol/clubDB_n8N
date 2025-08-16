@@ -2,10 +2,10 @@ services:
   - type: web
     name: n8n-free
     env: docker
-    plan: starter
+    plan: starter          # or free
     dockerfilePath: ./Dockerfile
-    startCommand: sh -c "n8n start --port $PORT"
     envVars:
+      # ---- Public URLs (update to your actual Render URL after first deploy) ----
       - key: N8N_HOST
         value: n8n-free.onrender.com
       - key: N8N_PROTOCOL
@@ -14,16 +14,26 @@ services:
         value: https://n8n-free.onrender.com/
       - key: N8N_EDITOR_BASE_URL
         value: https://n8n-free.onrender.com/
+
+      # ---- Port binding (Render sets PORT=10000; tell n8n to use it) ----
+      - key: N8N_PORT
+        value: "10000"
+
+      # ---- Timezone & security ----
       - key: GENERIC_TIMEZONE
         value: Asia/Kuala_Lumpur
       - key: N8N_ENCRYPTION_KEY
         generateValue: true
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: "false"
+
+      # ---- n8n's database (Supabase pooled) ----
       - key: DB_TYPE
         value: postgresdb
       - key: DB_POSTGRESDB_HOST
         value: aws-1-ap-southeast-1.pooler.supabase.com
       - key: DB_POSTGRESDB_PORT
-        value: 6543
+        value: "6543"
       - key: DB_POSTGRESDB_DATABASE
         value: postgres
       - key: DB_POSTGRESDB_USER
